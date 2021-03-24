@@ -1,0 +1,89 @@
+.ld-gjs-sections {
+  position: absolute;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  //   margin-left: -10px;
+  //   margin-right: -10px;
+  //   margin-top: -4px;
+  max-height: 630px;
+  left: 80px;
+  top: 0px;
+  // border: 1px solid #e3e6f0;
+  border-radius: 0.35rem;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  background: #ffff;
+  display: none;
+
+  &.active {
+    display: unset;
+  }
+
+  .layers {
+    overflow: auto;
+    max-height: 500px;
+
+    .gjs-layer {
+      font-weight: lighter;
+      text-align: left;
+      position: relative;
+      background-color: rgba(0, 0, 0, 0.1);
+      font-size: 0.75rem;
+
+      .gjs-layer-vis {
+        padding: 11px 12px;
+        color: #212529;
+      }
+      .gjs-one-bg {
+        background: #ffffff;
+        color: #212529;
+      }
+
+      &.gjs-selected .gjs-layer-title {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      .gjs-layer-title-c {
+        .gjs-layer-title {
+          padding-left: 40px;
+          padding: 6px 12px;
+          height: 35px;
+
+          .gjs-layer-caret {
+            margin-left: 5px;
+            padding: 1px 5px;
+            font-size: 10px;
+          }
+
+          .gjs-layer-name {
+            margin: 0 30px 0 15px;
+            font-size: 12px;
+            font-weight: 600;
+            display: table;
+            color: #212529;
+          }
+        }
+      }
+    }
+  }
+
+  ::-webkit-scrollbar-track {
+    //-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #f5f5f5;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 40px;
+    background-color: #f5f5f5;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    //-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #a39cac;
+  }
+}
