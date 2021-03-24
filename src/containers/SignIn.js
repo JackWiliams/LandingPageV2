@@ -1,29 +1,33 @@
-import React, {useEffect} from "react";
-import {Button, Checkbox, Form, Input} from "antd";
-import {useDispatch, useSelector} from "react-redux";
-import {Link} from "react-router-dom";
+import React, { useEffect } from "react";
+import { Button, Checkbox, Form, Input } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-import {userSignIn} from "../appRedux/actions/Auth";
+import { userSignIn } from "../appRedux/actions/Auth";
 import IntlMessages from "util/IntlMessages";
-import InfoView from "components/InfoView";
-
+import {
+  MailOutlined,
+  LockOutlined,
+  EyeTwoTone,
+  EyeInvisibleOutlined,
+} from "@ant-design/icons";
 
 const SignIn = (props) => {
   const dispatch = useDispatch();
-  const token = useSelector(({auth}) => auth.token);
+  const token = useSelector(({ auth }) => auth.token);
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
   };
 
-  const onFinish = values => {
-    console.log("finish",values)
+  const onFinish = (values) => {
+    console.log("finish", values);
     dispatch(userSignIn(values));
   };
 
   useEffect(() => {
     if (token !== null) {
-      props.history.push('/');
+      props.history.push("/");
     }
   }, [token, props.history]);
 
@@ -33,15 +37,21 @@ const SignIn = (props) => {
         <div className="gx-app-login-main-content">
           <div className="gx-app-logo-content">
             <div className="gx-app-logo-content-bg">
-              <img src="https://via.placeholder.com/272x395" alt='Neature'/>
+              <img src={require("assets/images/bg-login.jpg")} alt="Neature" />
             </div>
             <div className="gx-app-logo-wid">
-              <h1><IntlMessages id="app.userAuth.signIn"/></h1>
-              <p><IntlMessages id="app.userAuth.bySigning"/></p>
-              <p><IntlMessages id="app.userAuth.getAccount"/></p>
+              <h1>
+                <IntlMessages id="app.userAuth.signIn" />
+              </h1>
+              <p>
+                <IntlMessages id="app.userAuth.bySigning" />
+              </p>
+              <p>
+                <IntlMessages id="app.userAuth.getAccount" />
+              </p>
             </div>
             <div className="gx-app-logo">
-              <img alt="example" src={require("assets/images/logo.png")}/>
+              <img alt="example" src={require("assets/images/logo.png")} />
             </div>
           </div>
           <div className="gx-app-login-content">
@@ -50,35 +60,57 @@ const SignIn = (props) => {
               name="basic"
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
-              className="gx-signin-form gx-form-row0">
-
+              className="gx-signin-form gx-form-row0"
+            >
               <Form.Item
-                initialValue="demo@example.com"
-                rules={[{ required: true, message: 'The input is not valid E-mail!' }]} name="email">
-                <Input placeholder="Email"/>
+                name="email"
+                rules={[
+                  { required: true, message: "The input is not valid E-mail!" },
+                ]}
+              >
+                <Input
+                  prefix={<MailOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+                  placeholder="Email"
+                />
               </Form.Item>
               <Form.Item
-                initialValue="demo#123"
-                rules= {[{required: true, message: 'Please input your Password!'}]}  name="password">
-                <Input type="password" placeholder="Password"/>
+                name="password"
+                rules={[
+                  { required: true, message: "Please input your Password!" },
+                ]}
+              >
+                <Input.Password
+                  type="password"
+                  prefix={<LockOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+                  placeholder="Password"
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                />
               </Form.Item>
-              <Form.Item>
-                <Checkbox><IntlMessages id="appModule.iAccept"/></Checkbox>
-                <span className="gx-signup-form-forgot gx-link"><IntlMessages
-                  id="appModule.termAndCondition"/></span>
+              <Form.Item valuePropName="checked">
+                <Checkbox>Remember me</Checkbox>
+                <Link
+                  className="gx-login-form-forgot"
+                  to="/auth/forgot-password"
+                >
+                  Forgot password
+                </Link>
               </Form.Item>
               <Form.Item>
                 <Button type="primary" className="gx-mb-0" htmlType="submit">
-                  <IntlMessages id="app.userAuth.signIn"/>
+                  <IntlMessages id="app.userAuth.signIn" />
                 </Button>
-                <span><IntlMessages id="app.userAuth.or"/></span> <Link to="/signup"><IntlMessages
-                id="app.userAuth.signUp"/></Link>
+                <span>
+                  <IntlMessages id="app.userAuth.or" />
+                </span>{" "}
+                <Link to="/auth/signup">
+                  <IntlMessages id="app.userAuth.signUp" />
+                </Link>
               </Form.Item>
-              <span
-                className="gx-text-light gx-fs-sm"> demo user email: 'demo@example.com' and password: 'demo#123'</span>
+              <span className="gx-text-light gx-fs-sm"> </span>
             </Form>
           </div>
-          <InfoView/>
         </div>
       </div>
     </div>

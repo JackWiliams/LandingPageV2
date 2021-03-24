@@ -79,7 +79,7 @@ const App = () => {
 
   useEffect(() => {
     if (initURL === "") {
-      dispatch(setInitUrl(location.pathname));
+      dispatch(setInitUrl("/landing-pages/manager"));
     }
     const params = new URLSearchParams(location.search);
 
@@ -136,17 +136,17 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (location.pathname === "/") {
+    if (location.pathname === "/" || location.pathname === "/signin") {
       if (token === null) {
         history.push("/auth/signin");
-      } else if (
-        initURL === "" ||
-        initURL === "/" ||
-        initURL === "/auth/signin"
-      ) {
-        history.push("/landing-pages/manager");
       } else {
-        history.push(initURL);
+        if (initURL === "" || initURL === "/" || initURL === "/auth/signin") {
+          history.push("/landing-pages/manager");
+          window.location.reload();
+        } else {
+          history.push(initURL);
+          window.location.reload();
+        }
       }
     }
   }, [token, initURL, location, history]);

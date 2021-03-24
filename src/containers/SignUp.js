@@ -1,31 +1,55 @@
-import React, {useEffect} from "react";
-import {Button, Checkbox, Form, Input} from "antd";
-import {Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Button, Checkbox, Form, Input } from "antd";
+import { Link } from "react-router-dom";
 
-import {useDispatch, useSelector} from "react-redux";
-import {userSignUp} from "../appRedux/actions/Auth";
+import { useDispatch, useSelector } from "react-redux";
+import { userSignUp } from "../appRedux/actions/Auth";
 
 import IntlMessages from "util/IntlMessages";
-import InfoView from "components/InfoView";
+import {
+  UserOutlined,
+  LockOutlined,
+  MailOutlined,
+  EyeTwoTone,
+  EyeInvisibleOutlined,
+} from "@ant-design/icons";
 
 const FormItem = Form.Item;
 
 const SignUp = (props) => {
-
   const dispatch = useDispatch();
-  const token = useSelector(({auth}) => auth.token);
+  const token = useSelector(({ auth }) => auth.token);
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
+  const [isAccept, setIsAccept] = useState(false);
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
   };
 
-  const onFinish = values => {
-    dispatch(userSignUp(values));
+  const onFinish = ({ email, password, username }) => {
+    dispatch(userSignUp({ email, password, username }));
   };
+
+  // const onFinish = (values) => {
+  //   dispatch(userSignUp(values, (res) => handleResult(res)));
+  // };
+
+  // const handleResult = (res) => {
+  //   if (res === 200) {
+  //     message.success("Sign Up Successfully! Please Login to the website !");
+  //     history.push("/auth/signin");
+  //   } else if (res === 1005) {
+  //     message.error("Email is existed! Please try again");
+  //   } else if (res === 500) {
+  //     message.error("Server busy ! Please try again !");
+  //   } else {
+  //     message.error("Error when signing up ! Please try again !");
+  //   }
+  // };
 
   useEffect(() => {
     if (token !== null) {
-      props.history.push('/');
+      props.history.push("/");
     }
   });
 
@@ -35,15 +59,21 @@ const SignUp = (props) => {
         <div className="gx-app-login-main-content">
           <div className="gx-app-logo-content">
             <div className="gx-app-logo-content-bg">
-              <img src='https://via.placeholder.com/272x395' alt='Neature'/>
+              <img src={require("assets/images/bg-login.jpg")} alt="Neature" />
             </div>
             <div className="gx-app-logo-wid">
-              <h1><IntlMessages id="app.userAuth.signUp"/></h1>
-              <p><IntlMessages id="app.userAuth.bySigning"/></p>
-              <p><IntlMessages id="app.userAuth.getAccount"/></p>
+              <h1>
+                <IntlMessages id="app.userAuth.signUp" />
+              </h1>
+              <p>
+                <IntlMessages id="app.userAuth.bySigning" />
+              </p>
+              <p>
+                <IntlMessages id="app.userAuth.getAccount" />
+              </p>
             </div>
             <div className="gx-app-logo">
-              <img alt="example" src={require("assets/images/logo.png")}/>
+              <img alt="example" src={require("assets/images/logo.png")} />
             </div>
           </div>
 
@@ -53,34 +83,107 @@ const SignUp = (props) => {
               name="basic"
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
-              className="gx-signin-form gx-form-row0">
-              <FormItem rules={[{required: true, message: 'Please input your username!'}]} name="Username">
-                <Input placeholder="Username"/>
+              className="gx-signin-form gx-form-row0"
+            >
+              <FormItem
+                name="username"
+                rules={[
+                  { required: true, message: "Please input your username!" },
+                ]}
+              >
+                <Input
+                  prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+                  placeholder="Username"
+                  type="text"
+                />
               </FormItem>
 
-              <FormItem name="email" rules={[{
-                required: true, type: 'email', message: 'The input is not valid E-mail!',
-              }]}>
-                <Input placeholder="Email"/>
+              <FormItem
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    type: "email",
+                    message: "The input is not valid E-mail!",
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<MailOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+                  placeholder="Email"
+                  type="email"
+                />
               </FormItem>
-              <FormItem name="password"
-                        rules={[{required: true, message: 'Please input your Password!'}]}>
-                <Input type="password" placeholder="Password"/>
+              <FormItem
+                name="password"
+                rules={[
+                  { required: true, message: "Please input your Password!" },
+                ]}
+              >
+                <Input.Password
+                  prefix={<LockOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+                  type="password"
+                  placeholder="Password"
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                />
               </FormItem>
-              <FormItem  name="remember" valuePropName="checked">
-                <Checkbox>Remember me</Checkbox>
-                <Link className="gx-login-form-forgot" to="/custom-views/user-auth/forgot-password">Forgot password</Link>
+              <FormItem
+                name="confirm-password"
+                dependencies={["password"]}
+                hasFeedback
+                rules={[
+                  { required: true, message: "Please confirm your Password!" },
+                  ({ getFieldValue }) => ({
+                    validator(rule, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        "The two passwords that you entered do not match!"
+                      );
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password
+                  prefix={<LockOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+                  type="password"
+                  placeholder="Confirm Password"
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                />
               </FormItem>
               <FormItem>
-                <Button type="primary" className="gx-mb-0" htmlType="submit">
-                  <IntlMessages id="app.userAuth.signUp"/>
+                <FormItem>
+                  <Checkbox onClick={() => setIsAccept(!isAccept)}>
+                    <IntlMessages id="appModule.iAccept" />
+                  </Checkbox>
+                  <span className="gx-signup-form-forgot gx-link">
+                    <IntlMessages id="appModule.termAndCondition" />
+                  </span>
+                </FormItem>
+              </FormItem>
+              <FormItem>
+                <Button
+                  type="primary"
+                  className="gx-mb-0"
+                  htmlType="submit"
+                  disabled={!isAccept}
+                >
+                  <IntlMessages id="app.userAuth.signUp" />
                 </Button>
-                <span><IntlMessages id="app.userAuth.or"/></span> <Link to="/signin"><IntlMessages
-                id="app.userAuth.signIn"/></Link>
+                <span>
+                  <IntlMessages id="app.userAuth.or" />
+                </span>{" "}
+                <Link to="/auth/signin">
+                  <IntlMessages id="app.userAuth.signIn" />
+                </Link>
               </FormItem>
             </Form>
           </div>
-          <InfoView/>
         </div>
       </div>
     </div>
