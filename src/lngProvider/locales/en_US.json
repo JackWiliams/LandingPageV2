@@ -1,7 +1,6 @@
 {
   "app.announced": "A new version will be released on December 25th. Stay tuned!",
   "sidebar.main": "Main",
-  "sidebar.landingPage": "Landing Pages",
   "sidebar.dashboard": "Dashboard",
   "sidebar.dashboard.crm": "Crm",
   "sidebar.components": "Components",
@@ -305,11 +304,15 @@
   "sidebar.extensions.profile": "Profile",
   "sidebar.social": "Social Apps",
 
+  "sidebar.landingPage": "Landing Pages",
+  "sidebar.templates": "Templates",
+
   "pages.landing.btnCreate": " Create",
   "pages.landing.btnEdit": "Edit",
   "pages.landing.btnDelete": "Delete",
 
   "pages.landing.title": "LANDING PAGES MANAGER",
+  "pages.templates.title": "LANDING PAGE TEMPLATES",
   "pages.landing.searchBar.placeHolder": "Enter landing page name, domain,..",
   "pages.landing.tableColumn.colID": "ID",
   "pages.landing.tableColumn.colName": "Landing Page",

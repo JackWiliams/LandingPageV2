@@ -6,12 +6,14 @@ import {
   Row,
   Col,
   Input,
-  Card,
+  Dropdown,
   Table,
   Pagination,
   Tag,
   Space,
   Modal,
+  Menu,
+  Form,
 } from "antd";
 import {
   DeleteOutlined,
@@ -28,7 +30,7 @@ const LandingPage = () => {
   const intl = useIntl();
   const history = useHistory();
 
-  const [isModal, setIsModal] = useState(false);
+  const [isCreate, setIsCreate] = useState(false);
 
   const columns = [
     {
@@ -93,7 +95,7 @@ const LandingPage = () => {
           </Button>
           <Button
             className="ld-btn-table ld-btn-delete"
-            onClick={() => setIsModal(true)}
+            // onClick={() => setIsCreate(true)}
           >
             <DeleteOutlined /> <IntlMessages id="pages.landing.btnDelete" />
           </Button>
@@ -120,27 +122,48 @@ const LandingPage = () => {
     },
   ];
 
+  const menuCreate = (
+    <Menu>
+      <Menu.Item key="1" onClick={() => setIsCreate(true)}>
+        <strong>Use new blank</strong>
+      </Menu.Item>
+      <Menu.Item key="2" onClick={() => history.push("/templates")}>
+        <strong>Use template</strong>
+      </Menu.Item>
+    </Menu>
+  );
+
   const handleEdit = () => {
     history.push("/landing-pages/edit");
     // dispatch(onLayoutTypeChange("LAYOUT_TYPE_FULL"));
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
+  const onFinish = (values) => {
+    console.log("Success:", values);
   };
 
   return (
     <div>
       <Row justify="space-between" className="ld-row-lr-15">
         <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-          <h4 className="gx-font-weight-semi-bold gx-mb-3 ld-text-color-primary">
+          <h4 className="gx-font-weight-semi-bold gx-mb-4 gx-mt-2 ld-text-color-primary">
             <IntlMessages id="pages.landing.title" />
           </h4>
         </Col>
         <Col xs={11} sm={11} md={4} lg={4} xl={4} xxl={3} className="mr-0">
-          <Button
-            className="ld-btn-fill"
-            icon={<MedicineBoxOutlined />}
-            //onClick={() => setIsAddPackage(true)}
-          >
-            <IntlMessages id="pages.landing.btnCreate" />
-          </Button>
+          <Dropdown overlay={menuCreate} trigger={["click"]}>
+            <Button
+              className="ld-btn-fill"
+              icon={<MedicineBoxOutlined />}
+              // onClick={() => history.push("/templates")}
+            >
+              <IntlMessages id="pages.landing.btnCreate" />
+            </Button>
+          </Dropdown>
         </Col>
 
         <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8} className="">
@@ -178,10 +201,42 @@ const LandingPage = () => {
         />
       </div>
 
-      <Modal visible={isModal}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+      <Modal
+        visible={isCreate}
+        title={<b>Create new landing page</b>}
+        footer={false}
+        width={400}
+        closable={true}
+        onCancel={() => setIsCreate(false)}
+      >
+        <Form
+          initialValues={{ remember: true }}
+          name="basic"
+          onFinish={onFinish}
+          //   onFinishFailed={onFinishFailed}
+          className="gx-signin-form gx-form-row0"
+        >
+          <h5 className="gx-mb-2">Landing page name</h5>
+          <Form.Item
+            name="template-name"
+            rules={[
+              {
+                required: true,
+                message: "Please enter landing page name!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item className="ld-modal-btn-form">
+            <Button type="default" onClick={() => setIsCreate(false)}>
+              Cancle
+            </Button>
+            <Button type="primary" htmlType="submit">
+              Create
+            </Button>
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );

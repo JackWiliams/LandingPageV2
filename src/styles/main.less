@@ -65,8 +65,11 @@
 
 // sidebar
 .gx-layout-sider-scrollbar {
-  .ant-menu-item.ant-menu-item-only-child.ant-menu-item-selected {
-    background-color: #f5f2f2;
+  .ant-menu-item.ant-menu-item-only-child {
+    padding-left: 24px !important;
+    &.ant-menu-item-selected {
+      background-color: #f5f2f2;
+    }
   }
 }
 
@@ -150,5 +153,53 @@
     height: auto;
     width: 200px;
     margin-bottom: 20px;
+  }
+}
+
+// modal
+.ant-modal-content {
+  .ant-modal-header {
+    padding: 10px 16px;
+    background: #0615280d;
+    border-bottom: 1px solid #f5efef;
+
+    .ant-modal-title {
+      font-size: 14px;
+    }
+  }
+
+  .ant-modal-close {
+    top: 5px;
+    right: 5px;
+    .ant-modal-close-x {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+    }
+  }
+
+  .ant-modal-body {
+    .ant-form {
+      margin-bottom: -40px;
+
+      .ld-modal-btn-form {
+        .ant-form-item-control-input-content {
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+}
+
+// ant- table
+// custom title
+.ant-table-content {
+  thead {
+    tr {
+      th {
+        font-weight: bold;
+      }
+    }
   }
 }

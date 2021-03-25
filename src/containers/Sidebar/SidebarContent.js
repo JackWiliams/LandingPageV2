@@ -54,9 +54,21 @@ const SidebarContent = () => {
                 to="/landing-pages/manager"
                 activeClassName="landing-active-nav"
               >
-                <i className="icon icon-widgets" />
+                <i className="icon icon-product-list" />
                 <span>
-                  <IntlMessages id="sidebar.landingPage" />
+                  <b>
+                    <IntlMessages id="sidebar.landingPage" />
+                  </b>
+                </span>
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item key="templates">
+              <NavLink to="/templates" activeClassName="landing-active-nav">
+                <i className="icon icon-modal" />
+                <span>
+                  <b>
+                    <IntlMessages id="sidebar.templates" />
+                  </b>
                 </span>
               </NavLink>
             </Menu.Item>
