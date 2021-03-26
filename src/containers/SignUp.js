@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Checkbox, Form, Input } from "antd";
-import { Link } from "react-router-dom";
+import { Button, Checkbox, Form, Input, message } from "antd";
+import { Link, useHistory } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { userSignUp } from "../appRedux/actions/Auth";
@@ -13,11 +13,13 @@ import {
   EyeTwoTone,
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
+import { statusCode } from "../constants/StatusCode";
 
 const FormItem = Form.Item;
 
 const SignUp = (props) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const token = useSelector(({ auth }) => auth.token);
 
   const [isAccept, setIsAccept] = useState(false);
@@ -27,25 +29,23 @@ const SignUp = (props) => {
   };
 
   const onFinish = ({ email, password, username }) => {
-    dispatch(userSignUp({ email, password, username }));
+    dispatch(
+      userSignUp({ email, password, username }, (res) => handleResult(res))
+    );
   };
 
-  // const onFinish = (values) => {
-  //   dispatch(userSignUp(values, (res) => handleResult(res)));
-  // };
-
-  // const handleResult = (res) => {
-  //   if (res === 200) {
-  //     message.success("Sign Up Successfully! Please Login to the website !");
-  //     history.push("/auth/signin");
-  //   } else if (res === 1005) {
-  //     message.error("Email is existed! Please try again");
-  //   } else if (res === 500) {
-  //     message.error("Server busy ! Please try again !");
-  //   } else {
-  //     message.error("Error when signing up ! Please try again !");
-  //   }
-  // };
+  const handleResult = (status) => {
+    if (status === statusCode.Success) {
+      message.success("Sign Up Successfully! Please Login to the website !");
+      history.push("/auth/signin");
+    } else if (status === statusCode.UsernameExisted) {
+      message.error("Username is already in use !");
+    } else if (status === statusCode.EmailExisted) {
+      message.error("Email is already in use !");
+    } else {
+      message.error("Server is busy !");
+    }
+  };
 
   useEffect(() => {
     if (token !== null) {

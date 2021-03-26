@@ -1,16 +1,17 @@
 import React, { useEffect } from "react";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { userSignIn } from "../appRedux/actions/Auth";
 import IntlMessages from "util/IntlMessages";
 import {
-  MailOutlined,
+  UserOutlined,
   LockOutlined,
   EyeTwoTone,
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
+import { statusCode } from "../constants/StatusCode";
 
 const SignIn = (props) => {
   const dispatch = useDispatch();
@@ -21,8 +22,21 @@ const SignIn = (props) => {
   };
 
   const onFinish = (values) => {
-    console.log("finish", values);
-    dispatch(userSignIn(values));
+    dispatch(userSignIn(values, (res) => handleResult(res)));
+  };
+
+  const handleResult = (status) => {
+    if (status === statusCode.Success) {
+      message.success("Login successfully !");
+    } else if (status === statusCode.UnAuthorized) {
+      message.error("Username or password is not correct");
+    } else if (status === statusCode.Fail) {
+      message.error("User not found!");
+    } else if (status === statusCode.BadRequest) {
+      message.error("Server busy ! Please try again !");
+    } else {
+      message.error("Login failed ! Please try again !");
+    }
   };
 
   useEffect(() => {
@@ -63,14 +77,12 @@ const SignIn = (props) => {
               className="gx-signin-form gx-form-row0"
             >
               <Form.Item
-                name="email"
-                rules={[
-                  { required: true, message: "The input is not valid E-mail!" },
-                ]}
+                name="username"
+                rules={[{ required: true, message: "Please enter user name" }]}
               >
                 <Input
-                  prefix={<MailOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
-                  placeholder="Email"
+                  prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+                  placeholder="User name"
                 />
               </Form.Item>
               <Form.Item

@@ -7,6 +7,8 @@ import {
   USER_DATA,
   USER_TOKEN_SET,
 } from "../../constants/ActionTypes";
+
+import { statusCode } from "../../constants/StatusCode";
 import axios from "util/Api";
 
 export const setInitUrl = (url) => {
@@ -16,66 +18,78 @@ export const setInitUrl = (url) => {
   };
 };
 
-export const userSignUp = ({ email, password, username }) => {
-  console.log(email, password);
+export const userSignUp = (
+  { email, password, username },
+  callback = () => {}
+) => {
   return (dispatch) => {
     dispatch({ type: FETCH_START });
     axios
-      .post("auth/register", {
+      .post("auth/signup", {
         email: email,
         password: password,
-        name: username,
+        username: username,
       })
-      .then(({ data }) => {
-        console.log("data:", data);
-        if (data.result) {
-          localStorage.setItem(
-            "token",
-            JSON.stringify(data.token.access_token)
-          );
-          axios.defaults.headers.common["authorization"] =
-            "Bearer " + data.token.access_token;
+      .then((res) => {
+        if (res.data && res.data.code == statusCode.Success) {
+          // localStorage.setItem(
+          //   "token",
+          //   JSON.stringify(res.data.data.token.accessToken)
+          // );
+          // axios.defaults.headers.common["authorization"] =
+          //   "Bearer " + res.data.data.accessToken;
+
+          // dispatch({
+          //   type: USER_TOKEN_SET,
+          //   payload: res.data.data.accessToken,
+          // });
+          // dispatch({ type: USER_DATA, payload: res.data.data });
           dispatch({ type: FETCH_SUCCESS });
-          dispatch({ type: USER_TOKEN_SET, payload: data.token.access_token });
-          dispatch({ type: USER_DATA, payload: data.user });
+          callback(res.data.code);
         } else {
-          console.log("payload: data.error", data.error);
+          console.log("payload: data.error", res.data.error);
           dispatch({ type: FETCH_ERROR, payload: "Network Error" });
+          callback(res.data.code);
         }
       })
       .catch(function (error) {
         dispatch({ type: FETCH_ERROR, payload: error.message });
         console.log("Error****:", error.message);
+        callback(statusCode.ServerBusy);
       });
   };
 };
 
-export const userSignIn = ({ email, password }) => {
+export const userSignIn = ({ username, password }, callback = () => {}) => {
   return (dispatch) => {
     dispatch({ type: FETCH_START });
     axios
-      .post("auth/login", {
-        email: email,
+      .post("auth/signin", {
+        username: username,
         password: password,
       })
-      .then(({ data }) => {
-        console.log("userSignIn: ", data);
-        if (data.result) {
+      .then((res) => {
+        if (res.data && res.data.code == statusCode.Success) {
           localStorage.setItem(
             "token",
-            JSON.stringify(data.token.access_token)
+            JSON.stringify(res.data.data.accessToken)
           );
           axios.defaults.headers.common["Authorization"] =
-            "Bearer " + data.token.access_token;
+            "Bearer " + res.data.data.accessToken;
           dispatch({ type: FETCH_SUCCESS });
-          dispatch({ type: USER_TOKEN_SET, payload: data.token.access_token });
+          dispatch({
+            type: USER_TOKEN_SET,
+            payload: res.data.data.accessToken,
+          });
+          callback(res.data.code);
         } else {
-          dispatch({ type: FETCH_ERROR, payload: data.error });
+          callback(res.data.code);
         }
       })
       .catch(function (error) {
         dispatch({ type: FETCH_ERROR, payload: error.message });
         console.log("Error****:", error.message);
+        callback(statusCode.ServerBusy);
       });
   };
 };
