@@ -28,7 +28,6 @@ import loadEventsManager from "./plugins/EventsManager";
 import LeftMenu from "./components/LeftMenu";
 import RightMenu from "./components/RightMenu";
 import StyleManager from "./components/StyleManager";
-import { URL_STORE_GRAPES } from "../../constants/UrlApi";
 
 import "grapesjs/dist/css/grapes.min.css";
 import "grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css";
@@ -41,7 +40,7 @@ function Editor() {
       const e = grapesjs.init({
         container: "#gjs",
         avoidInlineStyle: 1,
-        fromElement: true,
+        //fromElement: true,
         showOffsets: 1,
         modal: {
           backdrop: false,
@@ -70,7 +69,7 @@ function Editor() {
           gjsExport,
           gjsForm,
 
-          gjsPresetWebpage,
+          //  gjsPresetWebpage,
           parserPostCSS,
           pluginProductList,
           pluginSlider,
