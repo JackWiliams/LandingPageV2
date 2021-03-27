@@ -6,4 +6,5 @@ export const statusCode = {
   ServerBusy: "500",
   UsernameExisted: "1001",
   EmailExisted: "1002",
+  LandingNameExisted: "1003",
 };

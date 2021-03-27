@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import moment from "moment";
+
 import {
   Button,
   Row,
@@ -14,23 +16,40 @@ import {
   Modal,
   Menu,
   Form,
+  message,
+  Popconfirm,
 } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
   MedicineBoxOutlined,
+  QuestionCircleOutlined,
 } from "@ant-design/icons";
 
 import IntlMessages from "../../../util/IntlMessages";
-
 import { useIntl } from "react-intl";
+import { statusCode } from "./../../../constants/StatusCode";
+import {
+  getAllLandingPage,
+  createLandingPage,
+  getLandingPageByID,
+  deleteLandingPageByID,
+} from "../../../appRedux/actions/LandingPage";
 
 const { Search } = Input;
 const LandingPage = () => {
   const intl = useIntl();
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const [isCreate, setIsCreate] = useState(false);
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(20);
+  const [total, setTotal] = useState(null);
+  const [keyWord, setKeyWord] = useState("");
+  const [isFetch, setIsFetch] = useState(false);
+  const [listData, setListData] = useState([]);
+  const [itemDeleteID, setItemDeleteID] = useState(null);
 
   const columns = [
     {
@@ -46,8 +65,8 @@ const LandingPage = () => {
       title: intl.formatMessage({
         id: "pages.landing.tableColumn.colName",
       }),
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "landing_name",
+      key: "landing_name",
     },
     {
       title: intl.formatMessage({
@@ -56,7 +75,7 @@ const LandingPage = () => {
       dataIndex: "status",
       key: "status",
       render: (status) =>
-        status === 1 ? (
+        status === "published" ? (
           <Tag
             style={{ width: 60, textAlign: "center", margin: "auto" }}
             color="#87d068"
@@ -78,6 +97,7 @@ const LandingPage = () => {
       }),
       dataIndex: "created_date",
       key: "created_date",
+      render: (time) => moment(time).local().format("DD-MM-YYYY HH:mm:ss"),
     },
     {
       title: "",
@@ -90,35 +110,33 @@ const LandingPage = () => {
           //   handleActionClick(record.id, record.domain, record.text)
           // }
         >
-          <Button className="ld-btn-table" onClick={() => handleEdit()}>
+          <Button className="ld-btn-table" onClick={() => handleEdit(record)}>
             <EditOutlined /> <IntlMessages id="pages.landing.btnEdit" />
           </Button>
-          <Button
-            className="ld-btn-table ld-btn-delete"
-            // onClick={() => setIsCreate(true)}
+          <Popconfirm
+            placement="topLeft"
+            title={<b>Are you sure delete this landing page ?</b>}
+            icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+            onConfirm={() => handleDeleteLandingPage()}
+            cancelButtonProps={{
+              type: "default",
+              style: { width: 60, height: 30 },
+            }}
+            okButtonProps={{
+              type: "primary",
+              style: { width: 60, height: 30 },
+            }}
+            okText="Yes"
           >
-            <DeleteOutlined /> <IntlMessages id="pages.landing.btnDelete" />
-          </Button>
+            <Button
+              className="ld-btn-table ld-btn-delete"
+              onClick={() => setItemDeleteID(record._id)}
+            >
+              <DeleteOutlined /> <IntlMessages id="pages.landing.btnDelete" />
+            </Button>
+          </Popconfirm>
         </Space>
       ),
-    },
-  ];
-
-  const listData = [
-    {
-      name: "Landing Page 1",
-      status: 1,
-      created_date: "26/09/1998",
-    },
-    {
-      name: "Landing Page 2",
-      status: 1,
-      created_date: "26/09/1998",
-    },
-    {
-      name: "Landing Page 3",
-      status: 1,
-      created_date: "26/09/1998",
     },
   ];
 
@@ -133,18 +151,87 @@ const LandingPage = () => {
     </Menu>
   );
 
-  const handleEdit = () => {
-    history.push("/landing-pages/edit");
-    // dispatch(onLayoutTypeChange("LAYOUT_TYPE_FULL"));
+  const handleEdit = (record) => {
+    // đảm bảo luôn lấy được dữ liệu mới nhất của template
+    dispatch(
+      getLandingPageByID(record._id, (code, data) => {
+        if (code === statusCode.Success) {
+          localStorage.setItem("landing_current_info", JSON.stringify(data));
+          history.push("/landing-pages/edit");
+        } else {
+          message.error("Error when getting landing page data !");
+        }
+      })
+    );
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+  const handleDeleteLandingPage = () => {
+    if (itemDeleteID) {
+      dispatch(
+        deleteLandingPageByID(itemDeleteID, (code) => {
+          if (code === statusCode.Success) {
+            setIsFetch(true);
+            message.success("Delete landing page successfully!");
+            setIsFetch(false);
+          } else {
+            message.error("Failed ! Cannot delete landing page !");
+          }
+        })
+      );
+    }
   };
 
   const onFinish = (values) => {
-    console.log("Success:", values);
+    dispatch(
+      createLandingPage(values.landing_name, null, (code, data) => {
+        if (code === statusCode.Success) {
+          localStorage.setItem("landing_current_info", JSON.stringify(data));
+          setIsFetch(true);
+          message.success("Landing page was created successfully !");
+          setIsFetch(false);
+          setIsCreate(false);
+          history.push("/landing-pages/edit");
+        } else if (code === statusCode.LandingNameExisted) {
+          message.error("Failed ! Landing page name is already in use !");
+        } else {
+          message.error("Failed ! Cannot create new landing page !");
+        }
+      })
+    );
   };
+
+  const onChange = (current, pageSize) => {
+    setPage(current);
+    setSize(pageSize);
+  };
+
+  useEffect(() => {
+    dispatch(
+      getAllLandingPage(keyWord, page, size, (status, data) => {
+        if (status === statusCode.Success) {
+          setListData(data.data);
+          setTotal(data.total);
+        } else {
+          message.error("Error when getting landing page list !");
+        }
+      })
+    );
+  }, [size, page, keyWord]);
+
+  useEffect(() => {
+    if (isFetch) {
+      dispatch(
+        getAllLandingPage(keyWord, page, size, (status, data) => {
+          if (status === statusCode.Success) {
+            setListData(data.data);
+            setTotal(data.total);
+          } else {
+            message.error("Error when getting landing page list !");
+          }
+        })
+      );
+    }
+  }, [isFetch]);
 
   return (
     <div>
@@ -171,7 +258,7 @@ const LandingPage = () => {
             placeholder={intl.formatMessage({
               id: "pages.landing.searchBar.placeHolder",
             })}
-            //  onSearch={(value) => setKeyWord(value)}
+            onSearch={(value) => setKeyWord(value)}
             allowClear
             bordered={false}
             enterButton={true}
@@ -186,15 +273,15 @@ const LandingPage = () => {
           columns={columns}
           dataSource={listData}
           pagination={false}
-          rowKey="name"
+          rowKey="landing_name"
         />
         <br />
         <Pagination
-          // showTotal={(total) => `Total ${total} items`}
-          // total={total}
-          // defaultCurrent={page}
-          // defaultPageSize={pageSize}
-          //onChange={onChange}
+          showTotal={(total) => `Total ${total} items`}
+          total={total}
+          defaultCurrent={page}
+          defaultPageSize={size}
+          onChange={onChange}
           showQuickJumper
           showSizeChanger
           className="ld-pagination"
@@ -218,7 +305,7 @@ const LandingPage = () => {
         >
           <h5 className="gx-mb-2">Landing page name</h5>
           <Form.Item
-            name="template-name"
+            name="landing_name"
             rules={[
               {
                 required: true,

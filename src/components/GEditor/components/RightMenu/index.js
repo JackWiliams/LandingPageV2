@@ -115,7 +115,13 @@ const RightMenu = (props) => {
           {/* Quit part */}
           <Popconfirm
             placement="left"
-            title="Are you sure to quit？"
+            title={
+              <div>
+                <h4 style={{ fontWeight: "bold", color: " #dc3545" }}>
+                  Are you sure to quit ?
+                </h4>
+              </div>
+            }
             icon={<QuestionCircleOutlined style={{ color: "red" }} />}
             onConfirm={() => history.push("/landing-pages/manager")}
             cancelButtonProps={{

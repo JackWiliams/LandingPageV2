@@ -32,18 +32,6 @@ export const userSignUp = (
       })
       .then((res) => {
         if (res.data && res.data.code == statusCode.Success) {
-          // localStorage.setItem(
-          //   "token",
-          //   JSON.stringify(res.data.data.token.accessToken)
-          // );
-          // axios.defaults.headers.common["authorization"] =
-          //   "Bearer " + res.data.data.accessToken;
-
-          // dispatch({
-          //   type: USER_TOKEN_SET,
-          //   payload: res.data.data.accessToken,
-          // });
-          // dispatch({ type: USER_DATA, payload: res.data.data });
           dispatch({ type: FETCH_SUCCESS });
           callback(res.data.code);
         } else {
@@ -74,8 +62,8 @@ export const userSignIn = ({ username, password }, callback = () => {}) => {
             "token",
             JSON.stringify(res.data.data.accessToken)
           );
-          axios.defaults.headers.common["Authorization"] =
-            "Bearer " + res.data.data.accessToken;
+          localStorage.setItem("user", JSON.stringify(res.data.data));
+
           dispatch({ type: FETCH_SUCCESS });
           dispatch({
             type: USER_TOKEN_SET,
@@ -118,6 +106,13 @@ export const getUser = () => {
 export const userSignOut = () => {
   return (dispatch) => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("landing_current_info");
+    localStorage.removeItem("gjs-html");
+    localStorage.removeItem("gjs-components");
+    localStorage.removeItem("gjs-assets");
+    localStorage.removeItem("gjs-css");
+    localStorage.removeItem("gjs-styles");
     dispatch({ type: FETCH_SUCCESS });
     dispatch({ type: SIGNOUT_USER_SUCCESS });
     // axios
@@ -125,7 +120,7 @@ export const userSignOut = () => {
     //   .then(({ data }) => {
     //     console.log("log out", data);
     //     if (data.result) {
-    //       localStorage.removeItem("token");
+    //
     //       dispatch({ type: FETCH_SUCCESS });
     //       dispatch({ type: SIGNOUT_USER_SUCCESS });
     //     } else {

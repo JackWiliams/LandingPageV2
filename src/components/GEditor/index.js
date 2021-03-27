@@ -28,11 +28,12 @@ import loadEventsManager from "./plugins/EventsManager";
 import LeftMenu from "./components/LeftMenu";
 import RightMenu from "./components/RightMenu";
 import StyleManager from "./components/StyleManager";
+import { URL_STORE_GRAPES } from "../../constants/UrlApi";
 
 import "grapesjs/dist/css/grapes.min.css";
 import "grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css";
 
-function Editor({ id }) {
+function Editor() {
   const [editor, setEditor] = useState(null);
 
   useEffect(() => {
@@ -45,17 +46,18 @@ function Editor({ id }) {
         modal: {
           backdrop: false,
         },
-
         // Avoid any default panel
         panels: { defaults: [] },
         storageManager: {
           //autoSave: 0,
-          id: "gjs-", // Prefix identifier that will be used on parameters
-          type: "local", // Type of the storage
-          autosave: false, // Store data automatically
-          autoload: true, // Autoload stored data on init
-          stepsBeforeSave: 1,
-          urlStore: "",
+          // id: "gjs", // Prefix identifier that will be used on parameters
+          // type: "remote", // Type of the storage
+          // autosave: false, // Store data automatically
+          autoload: false, // Autoload stored data on init
+          // stepsBeforeSave: 3,
+          // urlStore: URL_STORE_GRAPES,
+          // urlLoad: URL_STORE_GRAPES,
+          // headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         },
         plugins: [
           gjsCustomCode,
@@ -68,7 +70,7 @@ function Editor({ id }) {
           gjsExport,
           gjsForm,
 
-          //gjsPresetWebpage,
+          gjsPresetWebpage,
           parserPostCSS,
           pluginProductList,
           pluginSlider,
@@ -210,32 +212,38 @@ function Editor({ id }) {
           ],
         },
       });
+
+      const landingData = localStorage.getItem("landing_current_info")
+        ? JSON.parse(localStorage.getItem("landing_current_info")).styles
+        : null;
+
+      if (landingData) {
+        e.setStyle(landingData.gjsStyle);
+        e.setComponents(landingData.gjsComponents);
+      }
+
       loadEditorEvents(e);
       // loadPanels(e);
       loadCommands(e);
       setEditor(e);
       e.setDevice("Desktop");
-      e.BlockManager.add("custom-block", {
-        label: "Text Overlay",
-        category: "layers",
-        content: {
-          tagName: "div",
-          draggable: true,
-          attributes: {
-            class: "filter-layer",
-          },
-          components: [
-            {
-              tagName: "div",
-              components: "<span>Important sounding text</span>",
-            },
-          ],
-        },
-      });
-    } else {
-      if (document) {
-        document.getElementById(id).append(editor.render());
-      }
+      // e.BlockManager.add("custom-block", {
+      //   label: "Text Overlay",
+      //   category: "layers",
+      //   content: {
+      //     tagName: "div",
+      //     draggable: true,
+      //     attributes: {
+      //       class: "filter-layer",
+      //     },
+      //     components: [
+      //       {
+      //         tagName: "div",
+      //         components: "<span>Important sounding text</span>",
+      //       },
+      //     ],
+      //   },
+      // });
     }
 
     return function cleanup() {

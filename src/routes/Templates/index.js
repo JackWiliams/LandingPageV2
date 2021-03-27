@@ -1,45 +1,30 @@
-import { Col, Input, Radio, Row, Modal, Form, Button } from "antd";
-import React, { useState } from "react";
+import { Col, Input, Radio, Row, Modal, Form, Button, message } from "antd";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
-import TemplateItem from "./TemplateItem";
 import { SearchOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { getAllLandingTemplate } from "../../appRedux/actions/LandingTemplate";
+import { createLandingPage } from "../../appRedux/actions/LandingPage";
+import { statusCode } from "../../constants/StatusCode";
 
 const { Search } = Input;
 const Templates = () => {
   const intl = useIntl();
   const history = useHistory();
+  const dispatch = useDispatch();
 
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(20);
+  const [templateName, setTemplateName] = useState("");
+  const [categoryType, setCategoryType] = useState("");
+  const [styleTemplate, setStyleTemplate] = useState(null);
+  const [isFetch, setIsFetch] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
-  const [listTemplates, setListTemplates] = useState([
-    {
-      id: 1,
-      name: "Template 1",
-      imgSrc:
-        "https://w.ladicdn.com/s250x250/57b167c9ca57d39c18a1c57c/untitled-1-221422.jpg",
-    },
-    {
-      id: 2,
-      name: "Template 2",
-      imgSrc:
-        "https://w.ladicdn.com/s250x250/57b167c9ca57d39c18a1c57c/landing-page-builder-953402.png",
-    },
-    {
-      id: 3,
-      name: "Template 3",
-      imgSrc:
-        "https://w.ladicdn.com/s250x250/uploads/images/c08cfead-9a7f-4064-a166-0715efe8fc19.jpg",
-    },
-    {
-      id: 4,
-      name: "Template 4",
-      imgSrc:
-        "https://w.ladicdn.com/s250x250/57b167c9ca57d39c18a1c57c/untitled-1-578275.jpg",
-    },
-  ]);
+  const [listTemplates, setListTemplates] = useState([]);
 
   const content = listTemplates.map((item) => (
-    <Col key={item.id} xxl={8} xl={8} lg={12} md={12} sm={12} xs={24}>
+    <Col key={item._id} xxl={8} xl={8} lg={12} md={12} sm={12} xs={24}>
       <div className="gx-card ld-templates-item">
         <div className="ld-templates-item-img">
           <img id="img-wrap" src={item.imgSrc} />
@@ -56,29 +41,80 @@ const Templates = () => {
             </Button>
           </div>
         </div>
-        <div className="ld-templates-item-name">{item.name}</div>
+        <div className="ld-templates-item-name">{item.template_name}</div>
       </div>
     </Col>
   ));
 
   const onChangeTab = (e) => {
     if (e && e.target.value) {
-      console.log(e.target.value);
+      if (e.target.value === "all") {
+        setCategoryType("");
+      } else setCategoryType(e.target.value);
     }
   };
 
   const onClickUseTemplate = (item) => {
-    console.log(item);
     setIsCreate(true);
+    setStyleTemplate(item.styles);
   };
-
-  // const onFinishFailed = (errorInfo) => {
-  //   console.log("Failed:", errorInfo);
-  // };
 
   const onFinish = (values) => {
-    console.log("Success:", values);
+    dispatch(
+      createLandingPage(values.landing_name, styleTemplate, (code, data) => {
+        if (code === statusCode.Success) {
+          localStorage.setItem("landing_current_info", JSON.stringify(data));
+          setIsFetch(true);
+          message.success("Landing page was created successfully !");
+          setIsFetch(false);
+          setIsCreate(false);
+          history.push("/landing-pages/edit");
+        } else if (code === statusCode.LandingNameExisted) {
+          message.error("Failed ! Landing page name is already in use !");
+        } else {
+          message.error("Failed ! Cannot create new landing page !");
+        }
+      })
+    );
   };
+
+  useEffect(() => {
+    dispatch(
+      getAllLandingTemplate(
+        templateName,
+        categoryType,
+        page,
+        size,
+        (status, data) => {
+          if (status === statusCode.Success) {
+            setListTemplates(data);
+          } else {
+            message.error("Error when getting landing templates list !");
+          }
+        }
+      )
+    );
+  }, [size, page, categoryType, templateName]);
+
+  useEffect(() => {
+    if (isFetch) {
+      dispatch(
+        getAllLandingTemplate(
+          templateName,
+          categoryType,
+          page,
+          size,
+          (status, data) => {
+            if (status === statusCode.Success) {
+              setListTemplates(data);
+            } else {
+              message.error("Error when getting landing templates list !");
+            }
+          }
+        )
+      );
+    }
+  }, [isFetch]);
 
   return (
     <div className="ld-templates-wrap">
@@ -94,26 +130,26 @@ const Templates = () => {
             <div className="ld-templates-menu-title">Topics</div>
             <div className="ld-templates-menu-topics">
               <Radio.Group
-                defaultValue={4}
+                defaultValue="all"
                 buttonStyle="solid"
                 onChange={onChangeTab}
               >
-                <Radio.Button id="ld-setting-radio" value={1}>
+                <Radio.Button id="ld-setting-radio" value="all">
                   All
                 </Radio.Button>
-                <Radio.Button id="ld-animation-radio" value={2}>
-                  CV - Portfolio - Profile
+                <Radio.Button id="ld-animation-radio" value={1}>
+                  Movies & Cinema
                 </Radio.Button>
-                <Radio.Button id="ld-event-radio" value={3}>
-                  Education
+                <Radio.Button id="ld-event-radio" value={2}>
+                  Travel
                 </Radio.Button>
-                <Radio.Button id="ld-style-radio" value={4}>
-                  PR & Marketing
-                </Radio.Button>
-                <Radio.Button id="ld-animation-radio" value={5}>
+                <Radio.Button id="ld-style-radio" value={3}>
                   Wedding Invitation
                 </Radio.Button>
-                <Radio.Button id="ld-animation-radio" value={6}>
+                <Radio.Button id="ld-animation-radio" value={4}>
+                  CV - Portfolio - Profile
+                </Radio.Button>
+                <Radio.Button id="ld-animation-radio" value={5}>
                   Food & Restaurant
                 </Radio.Button>
               </Radio.Group>
@@ -124,7 +160,7 @@ const Templates = () => {
           <div className="ld-templates-menu right">
             <Search
               placeholder="Search template name ..."
-              //    onSearch={(value) => setKeyWord(value)}
+              onSearch={(value) => setTemplateName(value)}
               allowClear
               bordered={false}
               enterButton={<SearchOutlined />}
@@ -154,7 +190,7 @@ const Templates = () => {
         >
           <h5 className="gx-mb-2">Landing page name</h5>
           <Form.Item
-            name="template-name"
+            name="landing_name"
             rules={[
               {
                 required: true,

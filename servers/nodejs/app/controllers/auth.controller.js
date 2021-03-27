@@ -75,7 +75,7 @@ exports.signin = (req, res) => {
     .populate("roles", "-__v")
     .exec((err, user) => {
       if (err) {
-        res.status(500).send({ data: { message: err }, code: "400" });
+        res.status(200).send({ data: { message: err }, code: "400" });
         return;
       }
 
