@@ -19,8 +19,11 @@ const Templates = () => {
   const [templateName, setTemplateName] = useState("");
   const [categoryType, setCategoryType] = useState("");
   const [styleTemplate, setStyleTemplate] = useState(null);
+  const [htmlPreview, setHtmlPreview] = useState(null);
+  const [titlePreview, setTitlePreview] = useState("Preview");
   const [isFetch, setIsFetch] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
+  const [isPreview, setIsPreview] = useState(false);
   const [listTemplates, setListTemplates] = useState([]);
 
   const content = listTemplates.map((item) => (
@@ -35,7 +38,10 @@ const Templates = () => {
             >
               <EditOutlined /> Use
             </Button>
-            <Button className="ld-btn-fill">
+            <Button
+              className="ld-btn-fill"
+              onClick={() => onClickPreview(item)}
+            >
               <EyeOutlined />
               Preview
             </Button>
@@ -57,6 +63,12 @@ const Templates = () => {
   const onClickUseTemplate = (item) => {
     setIsCreate(true);
     setStyleTemplate(item.styles);
+  };
+
+  const onClickPreview = (item) => {
+    setIsPreview(true);
+    setHtmlPreview(item.html_preview);
+    setTitlePreview(item.template_name);
   };
 
   const onFinish = (values) => {
@@ -177,7 +189,8 @@ const Templates = () => {
         visible={isCreate}
         title={<b>Create new landing page</b>}
         footer={false}
-        width={400}
+        // width="100%"
+        // height="100%"
         closable={true}
         onCancel={() => setIsCreate(false)}
       >
@@ -210,6 +223,33 @@ const Templates = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      {isPreview && (
+        <div className="ld-preview-section ">
+          <div className="ld-preview-header">
+            <div className="ld-preview-title">Preview: {titlePreview}</div>
+            <i
+              title="Close preview"
+              className="icon icon-close-circle ld-preview-close"
+              onClick={() => setIsPreview(false)}
+            ></i>
+          </div>
+          <iframe srcDoc={htmlPreview} className="ld-iframe-preview"></iframe>
+        </div>
+      )}
+
+      {/* <Modal
+        visible={isPreview}
+        title={<b>Preview landing page</b>}
+        footer={false}
+        width={1366}
+        closable={true}
+        onCancel={() => setIsPreview(false)}
+      >
+        <div className="ld-preview-section">
+          <iframe srcDoc={htmlPreview} className="ld-iframe-preview"></iframe>
+        </div>
+      </Modal> */}
     </div>
   );
 };

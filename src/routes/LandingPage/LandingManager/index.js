@@ -115,7 +115,7 @@ const LandingPage = () => {
           </Button>
           <Popconfirm
             placement="topLeft"
-            title={<b>Are you sure delete this landing page ?</b>}
+            title={<b style={{ color: "#583182" }}>Are you sure to delete ?</b>}
             icon={<QuestionCircleOutlined style={{ color: "red" }} />}
             onConfirm={() => handleDeleteLandingPage()}
             cancelButtonProps={{

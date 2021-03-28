@@ -117,7 +117,7 @@ const RightMenu = (props) => {
             placement="left"
             title={
               <div>
-                <h4 style={{ fontWeight: "bold", color: " #dc3545" }}>
+                <h4 style={{ fontWeight: "bold", color: "#583182" }}>
                   Are you sure to quit ?
                 </h4>
               </div>

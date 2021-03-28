@@ -27,6 +27,7 @@
     "grapesjs-plugin-export": "^1.0.7",
     "grapesjs-plugin-filestack": "^0.1.1",
     "grapesjs-plugin-forms": "^2.0.1",
+    "grapesjs-plugin-toolbox": "^1.0.4",
     "grapesjs-preset-webpage": "^0.1.11",
     "grapesjs-react": "^3.1.1",
     "grapesjs-rte-extensions": "^1.0.5",

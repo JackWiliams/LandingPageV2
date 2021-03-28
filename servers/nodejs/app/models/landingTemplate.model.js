@@ -8,6 +8,7 @@ const LandingTemplate = mongoose.model(
     category_type: Number,
     imgSrc: String,
     styles: {},
+    html_preview: String,
   })
 );
 

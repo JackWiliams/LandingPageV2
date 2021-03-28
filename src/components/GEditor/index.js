@@ -9,6 +9,7 @@ import gjsFlexbox from "grapesjs-blocks-flexbox";
 import gjsNav from "grapesjs-navbar";
 import gjsExport from "grapesjs-plugin-export";
 import gjsForm from "grapesjs-plugin-forms";
+import gjsToolbox from "grapesjs-plugin-toolbox";
 import pluginProductList from "./plugins/ProductList";
 import pluginSlider from "./plugins/Slider";
 import pluginRepeater from "./plugins/Repeater";
@@ -39,8 +40,8 @@ function Editor() {
     if (!editor) {
       const e = grapesjs.init({
         container: "#gjs",
-        avoidInlineStyle: 1,
-        //fromElement: true,
+        // avoidInlineStyle: 1,
+        fromElement: true,
         showOffsets: 1,
         modal: {
           backdrop: false,
@@ -68,8 +69,9 @@ function Editor() {
           gjsFlexbox,
           gjsExport,
           gjsForm,
+          //gjsToolbox,
 
-          //  gjsPresetWebpage,
+          //gjsPresetWebpage,
           parserPostCSS,
           pluginProductList,
           pluginSlider,
