@@ -19,8 +19,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = require("./app/models");
 const Role = db.role;
 
+// Thay đổi DB ở đây
+// 1. DB mongo online
+const uriDB =
+  "mongodb+srv://jackwiliams:O5SBek0f45jE897O@cluster0.bh0fe.mongodb.net/LandingPage?retryWrites=true&w=majority";
+//2. DB mongo local
+// const uriDB = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`;
 db.mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+  .connect(uriDB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
