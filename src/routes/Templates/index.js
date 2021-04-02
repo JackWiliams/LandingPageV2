@@ -189,8 +189,7 @@ const Templates = () => {
         visible={isCreate}
         title={<b>Create new landing page</b>}
         footer={false}
-        // width="100%"
-        // height="100%"
+        width={400}
         closable={true}
         onCancel={() => setIsCreate(false)}
       >
@@ -217,7 +216,7 @@ const Templates = () => {
             <Button type="default" onClick={() => setIsCreate(false)}>
               Cancle
             </Button>
-            <Button type="primary" htmlType="submit">
+            <Button className="ld-btn-fill" htmlType="submit">
               Create
             </Button>
           </Form.Item>
@@ -237,19 +236,6 @@ const Templates = () => {
           <iframe srcDoc={htmlPreview} className="ld-iframe-preview"></iframe>
         </div>
       )}
-
-      {/* <Modal
-        visible={isPreview}
-        title={<b>Preview landing page</b>}
-        footer={false}
-        width={1366}
-        closable={true}
-        onCancel={() => setIsPreview(false)}
-      >
-        <div className="ld-preview-section">
-          <iframe srcDoc={htmlPreview} className="ld-iframe-preview"></iframe>
-        </div>
-      </Modal> */}
     </div>
   );
 };

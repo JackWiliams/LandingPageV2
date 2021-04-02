@@ -1,14 +1,16 @@
-import GEditor from "../../../components/GEditor";
+import { message } from "antd";
 import "grapesjs/dist/css/grapes.min.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { useDispatch } from "react-redux";
 import { onNavStyleChange } from "../../../appRedux/actions/Setting";
-import { message } from "antd";
+import GEditor from "../../../components/GEditor";
 
 const EditLanding = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
+
+  const [listCustomBlocks, setListCustomBlocks] = useState([]);
 
   useEffect(() => {
     dispatch(onNavStyleChange("NAV_STYLE_FULL"));

@@ -21,10 +21,10 @@ const Role = db.role;
 
 // Thay đổi DB ở đây
 // 1. DB mongo online
-const uriDB =
-  "mongodb+srv://jackwiliams:O5SBek0f45jE897O@cluster0.bh0fe.mongodb.net/LandingPage?retryWrites=true&w=majority";
+// const uriDB =
+//   "mongodb+srv://jackwiliams:O5SBek0f45jE897O@cluster0.bh0fe.mongodb.net/LandingPage?retryWrites=true&w=majority";
 //2. DB mongo local
-// const uriDB = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`;
+const uriDB = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`;
 db.mongoose
   .connect(uriDB, {
     useNewUrlParser: true,
@@ -49,6 +49,7 @@ require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/landingPage.routes")(app);
 require("./app/routes/landingTemplate.routes")(app);
+require("./app/routes/customBlock.routes")(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

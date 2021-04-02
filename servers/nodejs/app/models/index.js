@@ -9,6 +9,7 @@ db.user = require("./user.model");
 db.role = require("./role.model");
 db.landingPage = require("./landingPage.model");
 db.landingTemplate = require("./landingTemplate.model");
+db.customBlock = require("./customBlock.model");
 
 db.ROLES = ["user", "admin", "moderator"];
 

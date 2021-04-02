@@ -30,6 +30,11 @@
   .blocks {
     overflow: auto;
     max-height: 500px;
+    display: none;
+
+    &.active {
+      display: block;
+    }
 
     .gjs-one-bg {
       background: #ffffff;
@@ -46,6 +51,14 @@
       text-align: left;
       position: relative;
       cursor: pointer;
+    }
+  }
+
+  .builtin-blocks {
+    display: none;
+
+    &.active {
+      display: unset;
     }
   }
 }

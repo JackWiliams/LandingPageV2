@@ -1,7 +1,7 @@
 export default (editor) => {
   const blockManager = editor.BlockManager;
   blockManager.add("header-eline", {
-    category: "Built-in Blocks",
+    category: "Header",
     label: `<div style="margin-bottom : 10px">
                 <img 
                     style="max-width: 100%;

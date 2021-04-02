@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import grapesjs from "grapesjs";
+import { getAllCustomBlock } from "./../../appRedux/actions/CustomBlock";
+import { statusCode } from "./../../constants/StatusCode";
+
 import gjsBasicBlocks from "grapesjs-blocks-basic";
 import parserPostCSS from "grapesjs-parser-postcss";
 import gjsCustomCode from "grapesjs-custom-code";
@@ -20,7 +24,6 @@ import pluginCProductList from "./plugins/CProductList";
 import pluginCollectionList from "./plugins/CollectionList";
 import pluginGrid from "./plugins/Grid";
 import pluginDropdown from "./plugins/Dropdown";
-import blockHeaderEline from "./plugins/BuiltInBlocks/Headers/Eline";
 import loadEditorEvents from "./events";
 import loadCommands from "./commands";
 import loadPanels from "./panels";
@@ -34,7 +37,38 @@ import "grapesjs/dist/css/grapes.min.css";
 import "grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css";
 
 function Editor() {
+  const dispatch = useDispatch();
   const [editor, setEditor] = useState(null);
+
+  const initBlocks = (e) => {
+    // Phan chia block theo category
+    const blocks = e.BlockManager.getAll();
+
+    console.log(blocks);
+
+    // Load basic block
+    const basicBlockFilter = blocks.filter(
+      (block) => block.get("category") != "Header"
+    );
+    const basicBlocksEl = e.BlockManager.render(basicBlockFilter, {
+      external: true,
+    });
+
+    if (basicBlocksEl) {
+      document.getElementById("basic-blocks").appendChild(basicBlocksEl);
+    }
+
+    // Load custom block
+    const customBlockFilter = blocks.filter(
+      (block) => block.get("category") == "Header"
+    );
+    const newBlocksEl = e.BlockManager.render(customBlockFilter, {
+      external: true,
+    });
+    if (newBlocksEl) {
+      document.getElementById("builtin-blocks").appendChild(newBlocksEl);
+    }
+  };
 
   useEffect(() => {
     if (!editor) {
@@ -73,18 +107,17 @@ function Editor() {
 
           //gjsPresetWebpage,
           parserPostCSS,
-          pluginProductList,
-          pluginSlider,
-          pluginRepeater,
-          pluginAuthor,
-          pluginForm,
-          pluginStickyBar,
-          pluginCProductList,
-          pluginGrid,
-          pluginCollectionList,
-          pluginDropdown,
+          // pluginProductList,
+          // pluginSlider,
+          // pluginRepeater,
+          // pluginAuthor,
+          // pluginForm,
+          // pluginStickyBar,
+          // pluginCProductList,
+          // pluginGrid,
+          // pluginCollectionList,
+          // pluginDropdown,
           // loadEventsManager,
-          blockHeaderEline,
         ],
         pluginsOpts: {},
         canvas: {
@@ -101,8 +134,8 @@ function Editor() {
           ],
         },
         blockManager: {
-          appendTo: "#blocks",
-          blocks: [],
+          // appendTo: "#blocks",
+          // blocks: [],
         },
 
         layerManager: {
@@ -214,6 +247,7 @@ function Editor() {
         },
       });
 
+      // Load template
       const landingData = localStorage.getItem("landing_current_info")
         ? JSON.parse(localStorage.getItem("landing_current_info")).styles
         : null;
@@ -223,28 +257,57 @@ function Editor() {
         e.setComponents(landingData.gjsComponents);
       }
 
+      // load event+ command
       loadEditorEvents(e);
       // loadPanels(e);
       loadCommands(e);
       setEditor(e);
       e.setDevice("Desktop");
-      // e.BlockManager.add("custom-block", {
-      //   label: "Text Overlay",
-      //   category: "layers",
-      //   content: {
-      //     tagName: "div",
-      //     draggable: true,
-      //     attributes: {
-      //       class: "filter-layer",
-      //     },
-      //     components: [
-      //       {
-      //         tagName: "div",
-      //         components: "<span>Important sounding text</span>",
-      //       },
-      //     ],
-      //   },
-      // });
+
+      dispatch(
+        getAllCustomBlock(1, 20, (status, listData) => {
+          console.log("1");
+          if (status === statusCode.Success && listData.length > 0) {
+            console.log("2");
+            listData.forEach((item) => {
+              console.log(" 3");
+              e.BlockManager.add(item.block_name, {
+                label: `<div>
+                        <img
+                            style="max-width: 100%;
+                                   display: inline-block;
+                                   vertical-align: middle;"
+                            src=${item.imgSrc} />
+                        <div style="font-weight: bold;
+                                    padding-top: 10px;
+                                    font-size: 11px;"> ${item.label}</div>
+                    </div>`,
+                category: item.category,
+                attributes: {
+                  style: "width: 100%",
+                },
+                content: {
+                  tagName: "div",
+                  draggable: true,
+                  attributes: {
+                    //class: "filter-layer",
+                  },
+                  components: [
+                    {
+                      // tagName: "div",
+                      components: item.html_components,
+                    },
+                  ],
+                },
+              });
+            });
+
+            initBlocks(e);
+          } else {
+            console.error("Error when getting custom blocks list !");
+          }
+        })
+      );
     }
 
     return function cleanup() {

@@ -15,7 +15,6 @@ import AddBlocks from "./AddBlocks/index";
 import Sections from "./Sections/index";
 import { useIntl } from "react-intl";
 
-const mapStateToProps = () => ({});
 const LeftMenu = (props) => {
   const intl = useIntl();
   const [isAddBlocks, setIsAddBlocks] = useState(false);
@@ -151,10 +150,10 @@ const LeftMenu = (props) => {
               <div className="item-label">
                 {intl.formatMessage({
                   id: "pages.landing.edit.leftMenu.add",
-                })}{" "}
+                })}
               </div>
             </div>
-            <AddBlocks visible={isAddBlocks} />
+            <AddBlocks visible={isAddBlocks} editore={props.editor} />
 
             {/* Sections part */}
             <div
