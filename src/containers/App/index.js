@@ -16,6 +16,7 @@ import AppLocale from "lngProvider";
 import MainApp from "./MainApp";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";
+import HomePage from "../HomePage";
 import { setInitUrl } from "appRedux/actions/Auth";
 import {
   onLayoutTypeChange,
@@ -138,7 +139,7 @@ const App = () => {
   useEffect(() => {
     if (location.pathname === "/" || location.pathname === "/signin") {
       if (token === null) {
-        history.push("/auth/signin");
+        history.push("/homepage");
       } else {
         if (initURL === "" || initURL === "/" || initURL === "/auth/signin") {
           history.push("/landing-pages/manager");
@@ -162,6 +163,7 @@ const App = () => {
         <Switch>
           <Route exact path="/auth/signin" component={SignIn} />
           <Route exact path="/auth/signup" component={SignUp} />
+          <Route exact path="/homepage" component={HomePage} />
           <RestrictedRoute
             path={`${match.url}`}
             token={token}
