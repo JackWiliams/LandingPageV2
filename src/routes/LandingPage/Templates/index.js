@@ -150,19 +150,23 @@ const Templates = () => {
                   All
                 </Radio.Button>
                 <Radio.Button id="ld-animation-radio" value={1}>
-                  Movies & Cinema
+                  Movies - Cinemas
                 </Radio.Button>
                 <Radio.Button id="ld-event-radio" value={2}>
                   Travel
                 </Radio.Button>
+
                 <Radio.Button id="ld-style-radio" value={3}>
-                  Wedding Invitation
+                  Business - Company
                 </Radio.Button>
                 <Radio.Button id="ld-animation-radio" value={4}>
-                  CV - Portfolio - Profile
+                  Technology
+                </Radio.Button>
+                <Radio.Button id="ld-animation-radio" value={6}>
+                  PR - Marketing
                 </Radio.Button>
                 <Radio.Button id="ld-animation-radio" value={5}>
-                  Food & Restaurant
+                  CV - Portfolio - Profile
                 </Radio.Button>
               </Radio.Group>
             </div>

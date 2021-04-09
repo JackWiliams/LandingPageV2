@@ -44,7 +44,7 @@ const LandingPage = () => {
 
   const [isCreate, setIsCreate] = useState(false);
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(20);
+  const [size, setSize] = useState(10);
   const [total, setTotal] = useState(null);
   const [keyWord, setKeyWord] = useState("");
   const [isFetch, setIsFetch] = useState(false);
@@ -52,14 +52,28 @@ const LandingPage = () => {
   const [itemDeleteID, setItemDeleteID] = useState(null);
 
   const columns = [
+    // {
+    //   title: intl.formatMessage({
+    //     id: "pages.landing.tableColumn.colID",
+    //   }),
+    //   width: "5%",
+    //   key: "id",
+    //   dataIndex: "id",
+    //   render: (text, record) => listData.indexOf(record) + 1,
+    // },
     {
-      title: intl.formatMessage({
-        id: "pages.landing.tableColumn.colID",
-      }),
       width: "5%",
       key: "id",
       dataIndex: "id",
-      render: (text, record) => listData.indexOf(record) + 1,
+      render: (text, record) => (
+        <i
+          className="icon icon-wysiwyg ld-text-primary"
+          style={{
+            fontSize: 20,
+            margin: "auto",
+          }}
+        ></i>
+      ),
     },
     {
       title: intl.formatMessage({
@@ -67,6 +81,7 @@ const LandingPage = () => {
       }),
       dataIndex: "landing_name",
       key: "landing_name",
+      render: (text, record) => <b>{text}</b>,
     },
     {
       title: intl.formatMessage({

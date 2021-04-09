@@ -3,8 +3,8 @@ const db = require("../models");
 const LandingPage = db.landingPage;
 
 exports.getAllLandingPage = (req, res) => {
-  const size = parseInt(req.query.size);
-  const page = parseInt(req.query.page);
+  const size = parseInt(req.query.size || 20);
+  const page = parseInt(req.query.page || 1);
 
   const landingName = req.query.landing_name;
   let filter = {};
@@ -19,19 +19,24 @@ exports.getAllLandingPage = (req, res) => {
     };
   }
 
+  var total = 0;
+  // const total = LandingPage.find(filter).countDocuments();
+
   LandingPage.find(filter)
     .limit(size)
     .skip(size * Math.max(0, page - 1))
     .exec((err, landingPages) => {
-      if (err) {
-        res.status(200).send({ data: { message: err }, code: "404" });
-        return;
-      }
+      LandingPage.find(filter).countDocuments((err, count) => {
+        if (err) {
+          res.status(200).send({ data: { message: err }, code: "404" });
+          return;
+        }
 
-      res.status(200).send({
-        data: landingPages,
-        total: landingPages.length,
-        code: "200",
+        res.status(200).send({
+          data: landingPages,
+          total: count,
+          code: "200",
+        });
       });
     });
 };
