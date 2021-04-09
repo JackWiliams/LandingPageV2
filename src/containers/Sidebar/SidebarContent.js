@@ -62,8 +62,11 @@ const SidebarContent = () => {
                 </span>
               </NavLink>
             </Menu.Item>
-            <Menu.Item key="templates">
-              <NavLink to="/templates" activeClassName="landing-active-nav">
+            <Menu.Item key="landing-pages/templates">
+              <NavLink
+                to="/landing-pages/templates"
+                activeClassName="landing-active-nav"
+              >
                 <i className="icon icon-modal" />
                 <span>
                   <b>

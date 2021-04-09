@@ -4,9 +4,9 @@ import { useDispatch } from "react-redux";
 import { useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
 import { SearchOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { getAllLandingTemplate } from "../../appRedux/actions/LandingTemplate";
-import { createLandingPage } from "../../appRedux/actions/LandingPage";
-import { statusCode } from "../../constants/StatusCode";
+import { getAllLandingTemplate } from "../../../appRedux/actions/LandingTemplate";
+import { createLandingPage } from "../../../appRedux/actions/LandingPage";
+import { statusCode } from "../../../constants/StatusCode";
 
 const { Search } = Input;
 const Templates = () => {

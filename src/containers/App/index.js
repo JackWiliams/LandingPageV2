@@ -17,6 +17,7 @@ import MainApp from "./MainApp";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";
 import HomePage from "../HomePage";
+import Templates from "../HomePage/Templates";
 import { setInitUrl } from "appRedux/actions/Auth";
 import {
   onLayoutTypeChange,
@@ -49,7 +50,7 @@ const RestrictedRoute = ({
       ) : (
         <Redirect
           to={{
-            pathname: "/auth/signin",
+            pathname: "/homepage",
             state: { from: location },
           }}
         />
@@ -164,6 +165,7 @@ const App = () => {
           <Route exact path="/auth/signin" component={SignIn} />
           <Route exact path="/auth/signup" component={SignUp} />
           <Route exact path="/homepage" component={HomePage} />
+          <Route exact path="/templates" component={Templates} />
           <RestrictedRoute
             path={`${match.url}`}
             token={token}

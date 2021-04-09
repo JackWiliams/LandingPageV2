@@ -145,7 +145,10 @@ const LandingPage = () => {
       <Menu.Item key="1" onClick={() => setIsCreate(true)}>
         <strong>Use new blank</strong>
       </Menu.Item>
-      <Menu.Item key="2" onClick={() => history.push("/templates")}>
+      <Menu.Item
+        key="2"
+        onClick={() => history.push("/landing-pages/templates")}
+      >
         <strong>Use template</strong>
       </Menu.Item>
     </Menu>
@@ -248,6 +251,7 @@ const LandingPage = () => {
               icon={<MedicineBoxOutlined />}
               // onClick={() => history.push("/templates")}
             >
+              {" "}
               <IntlMessages id="pages.landing.btnCreate" />
             </Button>
           </Dropdown>

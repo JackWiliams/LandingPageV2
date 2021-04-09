@@ -105,7 +105,7 @@ function Editor() {
           gjsForm,
           //gjsToolbox,
 
-          //gjsPresetWebpage,
+          gjsPresetWebpage,
           parserPostCSS,
           // pluginProductList,
           // pluginSlider,

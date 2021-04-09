@@ -10,11 +10,7 @@ module.exports = function (app) {
     next();
   });
 
-  app.get(
-    "/api/landing-templates/all",
-    [authJwt.verifyToken],
-    controller.getAllLandingTemplate
-  );
+  app.get("/api/landing-templates/all", controller.getAllLandingTemplate);
 
   app.get(
     "/api/landing-templates/id",

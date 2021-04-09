@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import {
   ThunderboltFilled,
   LayoutFilled,
   FireFilled,
   ArrowRightOutlined,
+  EditOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
-import "./../../styles/pages/homepage/bootstrap-4.5.0.min.css";
+import bootstrap from "./../../styles/pages/homepage/bootstrap-4.5.0.min.css";
 import Particles from "react-particles-js";
 
 const HomePage = () => {
-  //   const dispatch = useDispatch();
+  const history = useHistory();
   //   const token = useSelector(({ auth }) => auth.token);
   const myRef = React.useRef();
 
@@ -22,6 +25,10 @@ const HomePage = () => {
     if (scrollTop > 150) {
       el.classList.add("sticky");
     } else el.classList.remove("sticky");
+  };
+
+  const handleSignIn = () => {
+    history.push("/auth/signin");
   };
 
   return (
@@ -59,12 +66,15 @@ const HomePage = () => {
                   >
                     <ul id="nav" className="navbar-nav ml-auto">
                       <li className="nav-item active">
-                        <a className="page-scroll" href="#home">
+                        <a className="page-scroll" href="#">
                           <b> Home</b>
                         </a>
                       </li>
                       <li className="nav-item">
-                        <a className="page-scroll" href="#templates">
+                        <a
+                          className="page-scroll"
+                          onClick={() => history.push("/templates")}
+                        >
                           <b>Templates</b>
                         </a>
                       </li>
@@ -74,7 +84,7 @@ const HomePage = () => {
                         </a>
                       </li>
                       <li className="nav-item">
-                        <a className="page-scroll" href="#about-us">
+                        <a className="page-scroll" href="#">
                           <b> About us</b>
                         </a>
                       </li>
@@ -90,8 +100,8 @@ const HomePage = () => {
                     <a
                       className="main-btn"
                       data-scroll-nav="0"
-                      href="https://uideck.com/templates/basic/"
                       rel="nofollow"
+                      onClick={handleSignIn}
                     >
                       Sign in
                     </a>
@@ -132,7 +142,7 @@ const HomePage = () => {
                     you want.
                   </p>
                   <a
-                    href="#"
+                    onClick={() => history.push("/templates")}
                     className="main-btn wow fadeInUp "
                     data-wow-duration="1.3s"
                     data-wow-delay="1.1s"
@@ -476,7 +486,10 @@ const HomePage = () => {
             <div className="five-min-text">
               You'll have a beautiful landing page.
             </div>
-            <button className="main-btn getting-started-btn five-min-btn">
+            <button
+              className="main-btn getting-started-btn five-min-btn"
+              onClick={() => history.push("/templates")}
+            >
               Get started <ArrowRightOutlined className="icon-arrow" />
             </button>
             {/* <div className="row">
