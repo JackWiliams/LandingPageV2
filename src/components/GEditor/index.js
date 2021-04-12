@@ -46,9 +46,10 @@ function Editor() {
 
     console.log(blocks);
 
+    const lstCustom = ["Header", "Button", "Footer"];
     // Load basic block
     const basicBlockFilter = blocks.filter(
-      (block) => block.get("category") != "Header"
+      (block) => !lstCustom.includes(block.get("category").id)
     );
     const basicBlocksEl = e.BlockManager.render(basicBlockFilter, {
       external: true,
@@ -59,8 +60,8 @@ function Editor() {
     }
 
     // Load custom block
-    const customBlockFilter = blocks.filter(
-      (block) => block.get("category") == "Header"
+    const customBlockFilter = blocks.filter((block) =>
+      lstCustom.includes(block.get("category").id)
     );
     const newBlocksEl = e.BlockManager.render(customBlockFilter, {
       external: true,
@@ -257,20 +258,10 @@ function Editor() {
         e.setComponents(landingData.gjsComponents);
       }
 
-      // load event+ command
-      loadEditorEvents(e);
-      // loadPanels(e);
-      loadCommands(e);
-      setEditor(e);
-      e.setDevice("Desktop");
-
       dispatch(
         getAllCustomBlock(1, 20, (status, listData) => {
-          console.log("1");
           if (status === statusCode.Success && listData.length > 0) {
-            console.log("2");
             listData.forEach((item) => {
-              console.log(" 3");
               e.BlockManager.add(item.block_name, {
                 label: `<div>
                         <img
@@ -287,7 +278,7 @@ function Editor() {
                   style: "width: 100%",
                 },
                 content: {
-                  tagName: "div",
+                  //   tagName: "div",
                   draggable: true,
                   attributes: {
                     //class: "filter-layer",
@@ -301,13 +292,18 @@ function Editor() {
                 },
               });
             });
-
             initBlocks(e);
           } else {
             console.error("Error when getting custom blocks list !");
           }
         })
       );
+      // load event+ command
+      loadEditorEvents(e);
+      // loadPanels(e);
+      loadCommands(e);
+      setEditor(e);
+      e.setDevice("Desktop");
     }
 
     return function cleanup() {
