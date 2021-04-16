@@ -44,8 +44,6 @@ function Editor() {
     // Phan chia block theo category
     const blocks = e.BlockManager.getAll();
 
-    console.log(blocks);
-
     const lstCustom = ["Header", "Button", "Footer"];
     // Load basic block
     const basicBlockFilter = blocks.filter(

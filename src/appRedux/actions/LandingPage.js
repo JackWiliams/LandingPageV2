@@ -128,3 +128,41 @@ export const deleteLandingPageByID = (id, callback = () => {}) => {
       });
   };
 };
+
+export const publishLandingPage = (
+  landingID,
+  styles,
+  publishContents,
+  callback = () => {}
+) => {
+  return (dispatch) => {
+    dispatch({ type: FETCH_START });
+    axios
+      .post("landing-pages/publish", {
+        _id: landingID,
+        modified_date: new Date(),
+        modified_by: localStorage.getItem("user")
+          ? JSON.parse(localStorage.getItem("user")).username
+          : null,
+        status: "published",
+        styles: styles,
+        publish_contents: publishContents,
+      })
+      .then((res) => {
+        if (res.data && res.data.code == statusCode.Success) {
+          dispatch({ type: FETCH_SUCCESS });
+          // localStorage.setItem("landing_id", res.data.data.landing_id);
+          callback(res.data.code, res.data.data);
+        } else {
+          console.log("payload: data.error", res.data.error);
+          dispatch({ type: FETCH_ERROR, payload: "Network Error" });
+          callback(res.data.code, res.data.data);
+        }
+      })
+      .catch(function (error) {
+        dispatch({ type: FETCH_ERROR, payload: error.message });
+        console.log("Error****:", error.message);
+        callback(statusCode.ServerBusy, null);
+      });
+  };
+};

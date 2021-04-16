@@ -39,6 +39,12 @@ module.exports = function (app) {
     [authJwt.verifyToken],
     controller.deleteLandingPage
   );
+
+  app.post(
+    "/api/landing-pages/publish",
+    [authJwt.verifyToken],
+    controller.publishLandingPage
+  );
   //   app.get("/api/landing/all", controller.allAccess);
 
   //   app.get(

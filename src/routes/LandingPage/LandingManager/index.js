@@ -22,6 +22,7 @@ import {
 import {
   DeleteOutlined,
   EditOutlined,
+  EyeOutlined,
   MedicineBoxOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
@@ -125,6 +126,13 @@ const LandingPage = () => {
           //   handleActionClick(record.id, record.domain, record.text)
           // }
         >
+          <Button
+            className="ld-btn-view"
+            onClick={() => window.open(record.publish_url, "_blank")}
+            disabled={record.status === "unpublished"}
+          >
+            <EyeOutlined /> <IntlMessages id="pages.landing.btnViewWebsite" />
+          </Button>
           <Button className="ld-btn-table" onClick={() => handleEdit(record)}>
             <EditOutlined /> <IntlMessages id="pages.landing.btnEdit" />
           </Button>

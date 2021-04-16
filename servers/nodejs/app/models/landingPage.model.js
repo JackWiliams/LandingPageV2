@@ -10,6 +10,7 @@ const LandingPage = mongoose.model(
     modified_by: String,
     status: String,
     styles: {},
+    publish_url: String,
   })
 );
 

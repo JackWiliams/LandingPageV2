@@ -1,6 +1,10 @@
-const config = require("../config/auth.config");
+const pinataConfig = require("../config/pinata.config");
 const db = require("../models");
 const LandingPage = db.landingPage;
+
+const axios = require("axios");
+const FormData = require("form-data");
+const string2fileStream = require("string-to-file-stream");
 
 exports.getAllLandingPage = (req, res) => {
   const size = parseInt(req.query.size || 20);
@@ -63,6 +67,7 @@ exports.createLandingPage = (req, res) => {
     modified_by: req.body.modified_by || null,
     status: req.body.status || "unpublished",
     styles: req.body.styles,
+    publish_url: null,
   });
 
   if (!req.body.landing_name) {
@@ -155,4 +160,65 @@ exports.deleteLandingPage = (req, res) => {
       code: "200",
     });
   });
+};
+
+exports.publishLandingPage = async (req, res) => {
+  const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
+  let data = new FormData();
+
+  data.append(
+    "file",
+    string2fileStream(req.body.publish_contents, {
+      path: `index_${req.body._id}.html`,
+    })
+  );
+
+  axios
+    .post(url, data, {
+      maxContentLength: "Infinity", //this is needed to prevent axios from erroring out with large files
+      headers: {
+        "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+        pinata_api_key: pinataConfig.API_KEY,
+        pinata_secret_api_key: pinataConfig.API_SECRET,
+      },
+    })
+    .then(function (response) {
+      console.log(response.data.IpfsHash);
+
+      const filter = {
+        modified_date: req.body.modified_date || new Date(),
+        modified_by: req.body.modified_by || null,
+        status: req.body.status || "published",
+        styles: req.body.styles,
+        publish_url: `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`,
+        //__v: req.body.__v,
+      };
+      //handle response here
+      LandingPage.findByIdAndUpdate(
+        req.body._id,
+        filter,
+        { useFindAndModify: false },
+        (err) => {
+          if (err) {
+            res.status(200).send({ data: { message: err }, code: "400" });
+            return;
+          }
+
+          res.send({
+            data: {
+              cid: response.data.IpfsHash,
+              message: "Publish landing page successfully !",
+            },
+            code: "200",
+          });
+        }
+      );
+    })
+    .catch(function (error) {
+      res.status(200).send({
+        data: { message: "Cannot publish landing page !" },
+        code: "404",
+      });
+      console.log(error);
+    });
 };
