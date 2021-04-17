@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 
 import { userSignIn } from "../appRedux/actions/Auth";
 import IntlMessages from "util/IntlMessages";
@@ -12,10 +13,12 @@ import {
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
 import { statusCode } from "../constants/StatusCode";
+import { reCaptcha } from "../constants/ReCaptcha";
 
 const SignIn = (props) => {
   const dispatch = useDispatch();
   const token = useSelector(({ auth }) => auth.token);
+  const [isVerified, setIsVerified] = useState(false);
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -38,7 +41,11 @@ const SignIn = (props) => {
       message.error("Login failed ! Please try again !");
     }
   };
-
+  const onChange = (value) => {
+    if (value != null) {
+      setIsVerified(true);
+    }
+  };
   useEffect(() => {
     if (token !== null) {
       props.history.push("/");
@@ -100,6 +107,12 @@ const SignIn = (props) => {
                   }
                 />
               </Form.Item>
+              <ReCAPTCHA
+                // ref={recaptchaRef}
+                //   size="invisible"
+                sitekey={reCaptcha.SITE_KEY}
+                onChange={onChange}
+              />
               <Form.Item valuePropName="checked">
                 <Checkbox>Remember me</Checkbox>
                 <Link
@@ -109,8 +122,14 @@ const SignIn = (props) => {
                   Forgot password
                 </Link>
               </Form.Item>
+
               <Form.Item>
-                <Button type="primary" className="gx-mb-0" htmlType="submit">
+                <Button
+                  type="primary"
+                  className="gx-mb-0"
+                  htmlType="submit"
+                  disabled={!isVerified}
+                >
                   <IntlMessages id="app.userAuth.signIn" />
                 </Button>
                 <span>
@@ -120,6 +139,7 @@ const SignIn = (props) => {
                   <IntlMessages id="app.userAuth.signUp" />
                 </Link>
               </Form.Item>
+
               <span className="gx-text-light gx-fs-sm"> </span>
             </Form>
           </div>
