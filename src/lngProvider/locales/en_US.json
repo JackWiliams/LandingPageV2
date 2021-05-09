@@ -306,6 +306,8 @@
 
   "sidebar.landingPage": "Landing Pages",
   "sidebar.templates": "Templates",
+  "sidebar.userManager": "User Manager",
+  "sidebar.blockManager": "Blocks Manager",
 
   "pages.landing.btnCreate": " Create",
   "pages.landing.btnEdit": "Edit",
@@ -330,5 +332,13 @@
   "pages.landing.edit.rightMenu.setting": "Settings",
   "pages.landing.edit.rightMenu.advanced": "Advanced",
   "pages.landing.edit.rightMenu.publish": "Publish",
-  "pages.landing.edit.rightMenu.quit": "Quit"
+  "pages.landing.edit.rightMenu.quit": "Quit",
+
+  "pages.userManager.title": "USER MANAGER",
+  "pages.userManager.searchBar.placeHolder": "Enter user name ...",
+  "pages.userManager.tableColumn.colID": "ID",
+  "pages.userManager.tableColumn.colName": "Username",
+  "pages.userManager.tableColumn.colEmail": "Email",
+  "pages.userManager.tableColumn.colDate": "Created Date",
+  "pages.userManager.tableColumn.colPassword": "Password"
 }

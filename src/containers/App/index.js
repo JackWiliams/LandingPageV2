@@ -70,6 +70,15 @@ const App = () => {
   const history = useHistory();
   const match = useRouteMatch();
 
+  var roleUser = null;
+  const roles = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user")).roles
+    : null;
+
+  if (roles && roles[0]) {
+    roleUser = roles[0];
+  }
+
   useEffect(() => {
     let link = document.createElement("link");
     link.type = "text/css";
@@ -81,7 +90,11 @@ const App = () => {
 
   useEffect(() => {
     if (initURL === "") {
-      dispatch(setInitUrl("/landing-pages/manager"));
+      if (roleUser === "ROLE_USER") {
+        dispatch(setInitUrl("/landing-pages/manager"));
+      } else if (roleUser === "ROLE_ADMIN") {
+        dispatch(setInitUrl("/user-manager"));
+      }
     }
     const params = new URLSearchParams(location.search);
 
@@ -143,7 +156,12 @@ const App = () => {
         history.push("/homepage");
       } else {
         if (initURL === "" || initURL === "/" || initURL === "/auth/signin") {
-          history.push("/landing-pages/manager");
+          if (roleUser === "ROLE_ADMIN") {
+            history.push("/user-manager");
+          } else if (roleUser === "ROLE_USER") {
+            history.push("/landing-pages/manager");
+          }
+
           window.location.reload();
         } else {
           history.push(initURL);

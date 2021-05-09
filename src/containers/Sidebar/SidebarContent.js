@@ -15,6 +15,15 @@ const SidebarContent = () => {
   let { navStyle, themeType } = useSelector(({ settings }) => settings);
   const { pathname } = useSelector(({ common }) => common);
 
+  var roleUser = null;
+  const roles = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user")).roles
+    : null;
+
+  if (roles && roles[0]) {
+    roleUser = roles[0];
+  }
+
   const getNoHeaderClass = (navStyle) => {
     if (
       navStyle === NAV_STYLE_NO_HEADER_MINI_SIDEBAR ||
@@ -49,32 +58,66 @@ const SidebarContent = () => {
             theme={themeType === THEME_TYPE_LITE ? "lite" : "dark"}
             mode="inline"
           >
-            <Menu.Item key="landing-pages/manager">
-              <NavLink
-                to="/landing-pages/manager"
-                activeClassName="landing-active-nav"
-              >
-                <i className="icon icon-product-list" />
-                <span>
-                  <b>
-                    <IntlMessages id="sidebar.landingPage" />
-                  </b>
-                </span>
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="landing-pages/templates">
-              <NavLink
-                to="/landing-pages/templates"
-                activeClassName="landing-active-nav"
-              >
-                <i className="icon icon-modal" />
-                <span>
-                  <b>
-                    <IntlMessages id="sidebar.templates" />
-                  </b>
-                </span>
-              </NavLink>
-            </Menu.Item>
+            {roleUser === "ROLE_USER" && (
+              <Menu.Item key="landing-pages/manager">
+                <NavLink
+                  to="/landing-pages/manager"
+                  activeClassName="landing-active-nav"
+                >
+                  <i className="icon icon-product-list" />
+                  <span>
+                    <b>
+                      <IntlMessages id="sidebar.landingPage" />
+                    </b>
+                  </span>
+                </NavLink>
+              </Menu.Item>
+            )}
+            {roleUser === "ROLE_USER" && (
+              <Menu.Item key="landing-pages/templates">
+                <NavLink
+                  to="/landing-pages/templates"
+                  activeClassName="landing-active-nav"
+                >
+                  <i className="icon icon-modal" />
+                  <span>
+                    <b>
+                      <IntlMessages id="sidebar.templates" />
+                    </b>
+                  </span>
+                </NavLink>
+              </Menu.Item>
+            )}
+            {roleUser === "ROLE_ADMIN" && (
+              <Menu.Item key="user-manager">
+                <NavLink
+                  to="/user-manager"
+                  activeClassName="landing-active-nav"
+                >
+                  <i className="icon icon-avatar" />
+                  <span>
+                    <b>
+                      <IntlMessages id="sidebar.userManager" />
+                    </b>
+                  </span>
+                </NavLink>
+              </Menu.Item>
+            )}
+            {roleUser === "ROLE_ADMIN" && (
+              <Menu.Item key="blocks-manager">
+                <NavLink
+                  to="/blocks-manager"
+                  activeClassName="landing-active-nav"
+                >
+                  <i className="icon icon-widgets" />
+                  <span>
+                    <b>
+                      <IntlMessages id="sidebar.blockManager" />
+                    </b>
+                  </span>
+                </NavLink>
+              </Menu.Item>
+            )}
           </Menu>
         </CustomScrollbars>
       </div>
