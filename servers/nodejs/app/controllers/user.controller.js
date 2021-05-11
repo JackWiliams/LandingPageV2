@@ -15,8 +15,6 @@ exports.getAllUser = (req, res) => {
       username: { $regex: userName, $options: "i" },
     };
   }
-
-  var total = 0;
   // const total = LandingPage.find(filter).countDocuments();
 
   User.find(filter)
@@ -144,22 +142,36 @@ exports.updateUser = (req, res) => {
     return;
   }
 
-  User.findByIdAndUpdate(
-    req.body._id,
-    filter,
-    { useFindAndModify: false },
-    (err) => {
-      if (err) {
-        res.status(200).send({ data: { message: err }, code: "400" });
-        return;
-      }
-
-      res.send({
-        data: { message: "Update user successfully !" },
-        code: "200",
-      });
+  User.findOne({ username: req.body.username }, (err, oldUser) => {
+    if (err) {
+      res.status(200).send({ data: { message: err }, code: "400" });
+      return;
     }
-  );
+
+    if (oldUser) {
+      return res.status(200).send({
+        data: { message: "User name is already in use" },
+        code: "1001",
+      });
+    } else {
+      User.findByIdAndUpdate(
+        req.body._id,
+        filter,
+        { useFindAndModify: false },
+        (err) => {
+          if (err) {
+            res.status(200).send({ data: { message: err }, code: "400" });
+            return;
+          }
+
+          res.send({
+            data: { message: "Update user successfully !" },
+            code: "200",
+          });
+        }
+      );
+    }
+  });
 };
 
 exports.deleteUser = (req, res) => {

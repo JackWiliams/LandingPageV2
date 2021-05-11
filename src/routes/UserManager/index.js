@@ -68,7 +68,7 @@ const UserManager = () => {
       dataIndex: "id",
       render: (text, record) => (
         <i
-          className="icon icon-wysiwyg ld-text-primary"
+          className="icon icon-wall ld-text-primary"
           style={{
             fontSize: 20,
             margin: "auto",
@@ -279,7 +279,7 @@ const UserManager = () => {
           columns={columns}
           dataSource={listData}
           pagination={false}
-          rowKey="landing_name"
+          rowKey="username"
         />
         <br />
         <Pagination
@@ -449,7 +449,7 @@ const UserManager = () => {
               Cancle
             </Button>
             <Button type="primary" htmlType="submit">
-              Create
+              Update
             </Button>
           </Form.Item>
         </Form>

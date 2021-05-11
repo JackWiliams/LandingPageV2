@@ -7,4 +7,5 @@ export const statusCode = {
   UsernameExisted: "1001",
   EmailExisted: "1002",
   LandingNameExisted: "1003",
+  BlockNameExisted: "1004",
 };

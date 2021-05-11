@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import LandingPage from "./LandingPage";
 import UserManager from "./UserManager";
+import BlockManager from "./BlockManager";
 
 var roleUser = null;
 const roles = localStorage.getItem("user")
@@ -20,6 +21,9 @@ const App = ({ match }) => (
       )}
       {roleUser === "ROLE_ADMIN" && (
         <Route path={`${match.url}user-manager`} component={UserManager} />
+      )}
+      {roleUser === "ROLE_ADMIN" && (
+        <Route path={`${match.url}blocks-manager`} component={BlockManager} />
       )}
     </Switch>
   </div>

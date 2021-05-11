@@ -340,5 +340,13 @@
   "pages.userManager.tableColumn.colName": "Username",
   "pages.userManager.tableColumn.colEmail": "Email",
   "pages.userManager.tableColumn.colDate": "Created Date",
-  "pages.userManager.tableColumn.colPassword": "Password"
+  "pages.userManager.tableColumn.colPassword": "Password",
+
+  "pages.blocksManager.title": "BLOCKS MANAGER",
+  "pages.blocksManager.searchBar.placeHolder": "Enter block name ...",
+  "pages.blocksManager.tableColumn.colID": "ID",
+  "pages.blocksManager.tableColumn.colName": "Block name",
+  "pages.blocksManager.tableColumn.colLabel": "Label",
+  "pages.blocksManager.tableColumn.colCategory": "Category",
+  "pages.blocksManager.tableColumn.colImg": "Image"
 }

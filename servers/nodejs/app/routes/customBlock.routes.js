@@ -15,4 +15,22 @@ module.exports = function (app) {
     [authJwt.verifyToken],
     controller.getAllCustomBlock
   );
+
+  app.post(
+    "/api/custom-blocks",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.createBlock
+  );
+
+  app.delete(
+    "/api/custom-blocks/id",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.deleteBlock
+  );
+
+  app.put(
+    "/api/custom-blocks/id",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.updateBlock
+  );
 };

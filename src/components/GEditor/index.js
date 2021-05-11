@@ -257,7 +257,7 @@ function Editor() {
       }
 
       dispatch(
-        getAllCustomBlock(1, 20, (status, listData) => {
+        getAllCustomBlock(1, 20, "", (status, listData) => {
           if (status === statusCode.Success && listData.length > 0) {
             listData.forEach((item) => {
               e.BlockManager.add(item.block_name, {
