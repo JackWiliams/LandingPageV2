@@ -122,7 +122,7 @@ const HomePage = () => {
                     data-wow-duration="1.3s"
                     data-wow-delay="0.2s"
                   >
-                    Hi! We are <b>Civi Landing Page</b>
+                    Hi! We are <b>VILADI Landing Page</b>
                   </h4>
                   <h2
                     className="header-title wow fadeInUp"

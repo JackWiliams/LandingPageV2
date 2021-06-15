@@ -257,8 +257,13 @@ function Editor() {
       }
 
       dispatch(
-        getAllCustomBlock(1, 20, "", (status, listData) => {
-          if (status === statusCode.Success && listData.length > 0) {
+        getAllCustomBlock(1, 20, "", (status, data) => {
+          if (
+            status === statusCode.Success &&
+            data.data &&
+            data.data.length > 0
+          ) {
+            const listData = data.data;
             listData.forEach((item) => {
               e.BlockManager.add(item.block_name, {
                 label: `<div>

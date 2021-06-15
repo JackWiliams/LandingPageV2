@@ -118,6 +118,11 @@ const SignUp = (props) => {
                 name="password"
                 rules={[
                   { required: true, message: "Please input your Password!" },
+                  {
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+                    message:
+                      "Password must contain at least 8 characters, 1 number, 1 upper and 1 lowercase !",
+                  },
                 ]}
               >
                 <Input.Password

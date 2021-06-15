@@ -46,6 +46,7 @@ const SignIn = (props) => {
       setIsVerified(true);
     }
   };
+
   useEffect(() => {
     if (token !== null) {
       props.history.push("/");
@@ -96,6 +97,11 @@ const SignIn = (props) => {
                 name="password"
                 rules={[
                   { required: true, message: "Please input your Password!" },
+                  {
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+                    message:
+                      "Password must contain at least 8 characters, 1 number, 1 upper and 1 lowercase !",
+                  },
                 ]}
               >
                 <Input.Password
@@ -107,12 +113,12 @@ const SignIn = (props) => {
                   }
                 />
               </Form.Item>
-              <ReCAPTCHA
+              {/* <ReCAPTCHA
                 // ref={recaptchaRef}
                 //   size="invisible"
                 sitekey={reCaptcha.SITE_KEY}
                 onChange={onChange}
-              />
+              /> */}
               <Form.Item valuePropName="checked">
                 <Checkbox>Remember me</Checkbox>
                 <Link
@@ -128,7 +134,7 @@ const SignIn = (props) => {
                   type="primary"
                   className="gx-mb-0"
                   htmlType="submit"
-                  disabled={!isVerified}
+                  //disabled={!isVerified}
                 >
                   <IntlMessages id="app.userAuth.signIn" />
                 </Button>

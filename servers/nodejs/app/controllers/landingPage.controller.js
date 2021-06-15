@@ -81,6 +81,7 @@ exports.createLandingPage = (req, res) => {
   LandingPage.findOne(
     {
       landing_name: req.body.landing_name,
+      created_by: req.body.created_by,
     },
     (err, oldLanding) => {
       if (err) {
